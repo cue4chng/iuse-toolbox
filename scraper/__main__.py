@@ -15,25 +15,25 @@ regex = re.compile(
 
 def validate_url(url):
     if not regex.match(url): 
-    	raise argparse.ArgumentTypeError('Boolean value expected.')
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
     return url
 
 parser = argparse.ArgumentParser(description='IUSE Toolbox: Scraper Utility')
 parser.add_argument(
-	  			  '--start_url', 
+                  '--start_url', 
                   required=True, 
                   type=validate_url,
                   help='Seed URL for the crawler.')
 
-# parser.add_argument(
-# 	  			  '--output_path', 
-#                   required=False,
-#                   default=os.path.join(os.getcwd(), 'data'), 
-#                   help='Output path for crawled data.')
+parser.add_argument(
+                  '--output_path', 
+                  required=False,
+                  default=os.path.join(os.getcwd(), 'data'), 
+                  help='Output path for crawled data.')
 
 parser.add_argument(
-	  			  '--allowed_domains', 
+                  '--allowed_domains', 
                   required=False, 
                   type=str,
                   nargs='+', 
@@ -41,14 +41,14 @@ parser.add_argument(
                   help='Additional allowed domains (usage: --allowed_domains a b c).')
 
 parser.add_argument(
-	  			  '--pagecount', 
+                  '--pagecount', 
                   required=False, 
                   type=int, 
                   default=10,
                   help='Maximum number of pages to fetch.')
 
 parser.add_argument(
-	  			  '--max_depth', 
+                  '--max_depth', 
                   required=False, 
                   type=int, 
                   default=5,
@@ -61,7 +61,7 @@ seed = args['start_url']
 allowed_domains = [urlparse(seed).netloc, *args['allowed_domains']]
 
 crawler_cls = scraper.init_spider(allowed_domains=allowed_domains, 
-                      		      start_urls=[seed], )
+                                  start_urls=[seed], )
 
 crawl_settings = {
   'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
