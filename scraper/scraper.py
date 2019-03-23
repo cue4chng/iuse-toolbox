@@ -10,7 +10,6 @@ from multiprocessing import Process, Queue
 
 SETTINGS = get_project_settings()
 
-print(scrapy.__version__)
 
 # TODO - implement persisting scraped data to disk.
 def init_spider(**kwargs):
@@ -56,17 +55,3 @@ def run_spider(spider, **kwargs):
 
     if result is not None:
         raise result
-
-
-if __name__ == '__main__':
-  crawler_cls = init_spider(allowed_domains=['cs.usc.edu', 'viterbischool.usc.edu'], 
-                            start_urls=['https://www.cs.usc.edu/academic-programs/courses/'], )
-
-  # 
-  crawl_settings = {
-      'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-      'CLOSESPIDER_PAGECOUNT': 10,  # Can be changed later as needed.'
-      'DEPTH_LIMIT': 5
-  }
-
-  run_spider(crawler_cls, **crawl_settings)
