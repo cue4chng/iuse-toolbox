@@ -21,10 +21,15 @@ def validate_url(url):
 
 parser = argparse.ArgumentParser(description='IUSE Toolbox: Scraper Utility')
 parser.add_argument(
-                  '--start_url', 
-                  required=True, 
+                  '--seed_url', 
+                  required=False, 
                   type=validate_url,
-                  help='Seed URL for the crawler.')
+                  help='Seed URL for the crawler. Only one URL can be specified.')
+
+parser.add_argument(
+                  '--seed_url_file', 
+                  required=False, 
+                  help='Import seed URLs from a file.')
 
 parser.add_argument(
                   '--output_path', 
@@ -70,12 +75,18 @@ parser.add_argument(
 
 
 args = vars(parser.parse_args())
-seed = args['start_url']
 
-allowed_domains = [urlparse(seed).netloc, *args['allowed_domains']]
+if not (args['seed_url'] or args['seed_url_file']):
+  raise argparse.ArgumentTypeError('One of start_url or seed_url_file must be specified.')
 
+if args['seed_url']:
+  seeds = [args['seed_url']]
+else:
+  seeds = open(args['seed_url_file']).read().splitlines()
+
+allowed_domains = [urlparse(s).netloc for s in seeds] + args['allowed_domains']
 crawler_cls = scraper.init_spider(allowed_domains=allowed_domains, 
-                                  start_urls=[seed], )
+                                  start_urls=seeds, )
 
 crawl_settings = {
   'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
