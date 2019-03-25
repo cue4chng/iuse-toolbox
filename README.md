@@ -1,25 +1,19 @@
-### Syllabus Scraper
+## Syllabus Scraper
 
 Build and run through Docker. Clone the repo, `cd` into the project folder, and run
 ```
 docker build --tag auto-miner .
 docker run docker run -v /$(pwd):/app auto-miner python -m scraper [options]
 ```
-# Note: `auto-miner` is a provisional name only(!)
+(Note: `auto-miner` is a provisional name only(!))
 
 **Options**
- `--seed_url`
- Specify a single seed URL
-`--seed_url_file` 
-Seed URLs will be read from a file
-`--output_path`
-Specify directory to write crawl data to. Data will be saved in a single file `output.{csv|json}`.
-`--pagecount`
-Max pages to fetch
-`--max_depth`
-Max depth of links to follow.
-`--format`
-Crawl data format, one of `json` or `csv`
+- `--seed_url`: Specify a single seed URL
+- `--seed_url_file`: Seed URLs will be read from a file
+- `--output_path`: Specify directory to write crawl data to. Data will be saved in a single file `output.{csv|json}`.
+- `--pagecount`: Max pages to fetch
+- `--max_depth`: Max depth of links to follow.
+- `--format`: Crawl data format, one of `json` or `csv`
 
 **Sample run**
 
