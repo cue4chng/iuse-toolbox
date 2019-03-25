@@ -45,7 +45,7 @@ def init_spider(**kwargs):
 # Modified from https://stackoverflow.com/a/43661172/4909087
 def run_spider(spider, **kwargs):
     settings = get_project_settings()
-        
+
     data_dir = kwargs.pop('data_dir', None)
     if data_dir:
         if not os.path.exists(data_dir):
@@ -53,8 +53,10 @@ def run_spider(spider, **kwargs):
             
         feed_format = kwargs.pop('feed_format')
         settings.update({
-            **kwargs, 
-            **{'FEED_FORMAT': feed_format,'FEED_URI': os.path.join(data_dir, 'output.' + feed_format)}})
+            'FEED_FORMAT': feed_format,
+            'FEED_URI': os.path.join(data_dir, 'output.' + feed_format)
+        })
+    settings.update(kwargs)
     
     def f(q):
         try:
