@@ -25,8 +25,6 @@ docker run -v /$(pwd):/app auto-miner python -m scraper \
 	--pagecount 10 \
 	--max_depth 3 \
 	--format csv
-
-
 ```
 
 Output:
