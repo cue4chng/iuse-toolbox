@@ -1,30 +1,40 @@
 from twisted.internet import reactor
 
+import os
 import scrapy
+
 from scrapy import signals
 from scrapy.crawler import CrawlerProcess, CrawlerRunner
 from scrapy.conf import settings
 from scrapy.utils.project import get_project_settings
 
 from multiprocessing import Process, Queue
+from pathlib import Path
 
 SETTINGS = get_project_settings()
 
 
-# TODO - implement persisting scraped data to disk.
+class Item(scrapy.Item):
+    url = scrapy.Field()
+    body = scrapy.Field()
+    
+
 def init_spider(**kwargs):
     class Spider(scrapy.Spider):
         name = "edu_scraper"
         allowed_domains = kwargs.pop('allowed_domains', [])
         start_urls = kwargs.pop('start_urls', [])
-        data_dir = kwargs.pop('data_dir', None)
-            
-        def parse(self, response):
-            print(f'Visited {response.url}')
-            
-            for href in response.xpath('//a/@href').getall():
+
+        def parse(self, response):  
+            print(f'Visited {response.url}') 
+            item = Item()
+            item['url'] = response.url
+            item['body'] = response.body_as_unicode()
+            yield item
+                
+            for href in set(response.xpath('//a/@href').getall()):
                 yield scrapy.Request(response.urljoin(href), self.parse)
-        
+
             yield response 
         
         def closed(self, reason):
@@ -34,13 +44,22 @@ def init_spider(**kwargs):
 
 # Modified from https://stackoverflow.com/a/43661172/4909087
 def run_spider(spider, **kwargs):
-    settings = SETTINGS.copy()
-    settings.update(kwargs)
+    settings = get_project_settings()
+        
+    data_dir = kwargs.pop('data_dir', None)
+    if data_dir:
+        if not os.path.exists(data_dir):
+            os.makedirs(Path(data_dir).absolute())
+            
+        feed_format = kwargs.pop('feed_format')
+        settings.update({
+            **kwargs, 
+            **{'FEED_FORMAT': feed_format,'FEED_URI': os.path.join(data_dir, 'output.' + feed_format)}})
     
     def f(q):
         try:
-            runner = CrawlerRunner(settings)
-            deferred = runner.crawl(spider)
+            c = CrawlerProcess(settings)
+            deferred = c.crawl(spider)
             deferred.addBoth(lambda _: reactor.stop())
             reactor.run()
             q.put(None)

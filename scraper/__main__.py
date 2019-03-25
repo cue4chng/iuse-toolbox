@@ -54,6 +54,20 @@ parser.add_argument(
                   default=5,
                   help='Maximum links to follow from start_url.')
 
+parser.add_argument(
+                  '--data_dir', 
+                  required=False, 
+                  type=str, 
+                  default=None,
+                  help='Directory to write output file to.')
+
+parser.add_argument(
+                  '--format', 
+                  required=False,
+                  choices=['csv', 'json'],
+                  default='csv',
+                  help='Output format. Currently only supports CSV or JSON.')
+
 
 args = vars(parser.parse_args())
 seed = args['start_url']
@@ -69,4 +83,4 @@ crawl_settings = {
   'DEPTH_LIMIT': args['max_depth']
 }
 
-scraper.run_spider(crawler_cls, **crawl_settings)
+scraper.run_spider(crawler_cls, **crawl_settings, data_dir=args['data_dir'], feed_format=args['format'])
