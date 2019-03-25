@@ -3,7 +3,7 @@
 Build and run through Docker. Clone the repo, `cd` into the project folder, and run
 ```
 docker build --tag auto-miner .
-docker run docker run -v /$(pwd):/app auto-miner python -m scraper [options]
+docker run -v /$(pwd):/app auto-miner python -m scraper [options]
 ```
 (Note: `auto-miner` is a provisional name only(!))
 
