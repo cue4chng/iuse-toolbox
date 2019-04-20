@@ -3,7 +3,7 @@
 python3 -m scraper \
     --seed_url https://classes.usc.edu/term-20191/classes/csci/ \
     --allowed_domains usc.edu \
-    --data_dir crawl_data/ \
+    --output_path crawl_data/ \
     --pagecount 100 \
     --max_depth 5 \
     --format csv
@@ -40,27 +40,21 @@ def get_domain(url):
 
 parser = argparse.ArgumentParser(description='IUSE Toolbox: Scraper Utility')
 parser.add_argument(
+  '--output_path',
+  required=False,
+  default=os.path.join(os.getcwd(), 'data'),
+  help='Directory to write scraped data to.')
+
+parser.add_argument(
   '--seed_url',
   required=False,
   type=validate_url,
   help='Seed URL for the crawler. Only one URL can be specified.')
 
 parser.add_argument(
-  '--data_dir',
-  required=True,
-  type=str,
-  help='Directory to write scraped data to.')
-
-parser.add_argument(
   '--seed_url_file',
   required=False,
   help='Import seed URLs from a file.')
-
-parser.add_argument(
-  '--output_path',
-  required=False,
-  default=os.path.join(os.getcwd(), 'data'),
-  help='Output path for crawled data.')
 
 parser.add_argument(
   '--allowed_domains',
@@ -117,4 +111,4 @@ crawl_settings = {
 }
 
 scraper.run_spider(crawler_cls, **crawl_settings,
-           data_dir=args['data_dir'], feed_format=args['format'])
+           data_dir=args['output_path'], feed_format=args['format'])
