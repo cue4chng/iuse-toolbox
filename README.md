@@ -19,7 +19,7 @@ Note: One of `--seed_url` or `--seed_url_file` must be specified to run the craw
 
 **Sample run**
 
-To run a crawler on [USC's CS Spring19 Courses page](https://classes.usc.edu/term-20191/classes/csci/)and write to the directory `crawl_data/`, run
+To run a crawler on [USC's CS Spring19 Courses page](https://classes.usc.edu/term-20191/classes/csci/) and write to the directory `crawl_data/`, run
 ```
 docker run -v /$(pwd):/app auto-miner python -m scraper \
     --seed_url https://classes.usc.edu/term-20191/classes/csci/ \
@@ -29,7 +29,5 @@ docker run -v /$(pwd):/app auto-miner python -m scraper \
     --max_depth 5 \
     --format csv
 ```
-
-Output:
 
 Relevant pages are determined using a set of keywords. These pages are then scraped and written to `crawl_data/`. A mapping file of {url: filpath} is also created as `mapping.{json|csv}`.
