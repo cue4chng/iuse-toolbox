@@ -68,7 +68,7 @@ parser.add_argument(
   '--pagecount',
   required=False,
   type=int,
-  default=10,
+  default=100,
   help='Maximum number of pages to fetch.')
 
 parser.add_argument(
