@@ -8,47 +8,26 @@ docker run -v /$(pwd):/app auto-miner python -m scraper [options]
 (Note: `auto-miner` is a provisional name only(!))
 
 **Options**
+- `--output_path` (REQUIRED): Specify directory to write crawl data to. 
 - `--seed_url`: Specify a single seed URL
 - `--seed_url_file`: Seed URLs will be read from a file
-- `--output_path`: Specify directory to write crawl data to. Data will be saved in a single file `output.{csv|json}`.
 - `--pagecount`: Max pages to fetch
 - `--max_depth`: Max depth of links to follow.
 - `--format`: Crawl data format, one of `json` or `csv`
 
+Note: One of `--seed_url` or `--seed_url_file` must be specified to run the crawler.
+
 **Sample run**
 
-To run a crawler on [USC's CS courses page](https://www.cs.usc.edu/academic-programs/courses/) to crawl ten web pages and write to the directory `crawl_data/`, run
+To run a crawler on [USC's CS Spring19 Courses page](https://classes.usc.edu/term-20191/classes/csci/) and write to the directory `crawl_data/`, run
 ```
 docker run -v /$(pwd):/app auto-miner python -m scraper \
-	--seed_url https://www.cs.usc.edu/academic-programs/courses/ \
-	--data_dir crawl_data/ \
-	--pagecount 10 \
-	--max_depth 3 \
-	--format csv
+    --seed_url https://classes.usc.edu/term-20191/classes/csci/ \
+    --allowed_domains usc.edu \
+    --output_path crawl_data/ \
+    --pagecount 100 \
+    --max_depth 5 \
+    --format csv
 ```
 
-Output:
-
-```
-$ more crawl_data/output.json -n 1  
-[{"url": "https://www.cs.usc.edu/academic-programs/courses/", "body": "...", ...}]
-```
-
-Logging:
-
-```
-Visited https://www.cs.usc.edu/academic-programs/courses/
-Visited https://www.cs.usc.edu/academic-programs/phd/
-Visited https://www.cs.usc.edu/academic-programs/
-Visited https://www.cs.usc.edu/academic-programs/courses/
-Visited https://www.cs.usc.edu/research/annual-research-review/
-Visited https://www.cs.usc.edu/students/cs-job-announcements/
-Visited https://www.cs.usc.edu/academic-programs/graduate-certificate/
-Visited https://www.cs.usc.edu/special-topics-courses/
-Visited https://www.cs.usc.edu/people/staff-directory/
-Visited https://www.cs.usc.edu/about/bekey-lecture/
-Visited https://www.cs.usc.edu/academic-programs/phd/old-program/
-Visited https://www.cs.usc.edu/about/newsletters/
-Visited https://www.cs.usc.edu/news/
-Visited https://www.cs.usc.edu/students/cs-student-organizations/
-```
+Relevant pages are determined using a set of keywords. These pages are then scraped and written to `crawl_data/`. A mapping file of {url: filpath} is also created as `mapping.{json|csv}`.
